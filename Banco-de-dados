@@ -1,0 +1,85 @@
+CREATE TABLE Cliente (
+    Cliente_id INT PRIMARY KEY,
+    Nome VARCHAR(100),
+    Email VARCHAR(100),
+    Telefone VARCHAR(20)
+);
+
+CREATE TABLE Fila_de_Espera (
+    Fila_id INT PRIMARY KEY,
+    Hora_chegada DATETIME,
+    Status VARCHAR(50),
+    Cliente_id INT,
+    FOREIGN KEY (Cliente_id) REFERENCES Cliente(Cliente_id)
+);
+
+CREATE TABLE Credito (
+    Credito_id INT PRIMARY KEY,
+    Valor DECIMAL(10, 2),
+    Data_geracao DATE,
+    Status VARCHAR(50),
+    Cliente_id INT,
+    FOREIGN KEY (Cliente_id) REFERENCES Cliente(Cliente_id)
+);
+
+CREATE TABLE Servicos (
+    Servico_id INT PRIMARY KEY,
+    Nome VARCHAR(100),
+    Descricao TEXT,
+    Duracao INT, -- em minutos, por exemplo
+    Preco DECIMAL(10, 2)
+);
+
+CREATE TABLE Pacotes (
+    Pacote_id INT PRIMARY KEY,
+    Nome VARCHAR(100),
+    Descricao TEXT,
+    Preco DECIMAL(10, 2)
+);
+
+CREATE TABLE Servico_Pacote (
+    Pacote_id INT,
+    Servicos_id INT,
+    PRIMARY KEY (Pacote_id, Servicos_id),
+    FOREIGN KEY (Pacote_id) REFERENCES Pacotes(Pacote_id),
+    FOREIGN KEY (Servicos_id) REFERENCES Servicos(Servico_id)
+);
+
+CREATE TABLE Profissional (
+    Profissional_id INT PRIMARY KEY,
+    Nome VARCHAR(100),
+    Especialidades TEXT,
+    Disponibilidade_id INT,
+    FOREIGN KEY (Disponibilidade_id) REFERENCES Disponibilidade(Disponibilidade_id)
+);
+
+CREATE TABLE Disponibilidade (
+    Disponibilidade_id INT PRIMARY KEY,
+    Inicio DATETIME,
+    Fim DATETIME,
+    Status VARCHAR(50),
+    Profissional_id INT,
+    FOREIGN KEY (Profissional_id) REFERENCES Profissional(Profissional_id)
+);
+
+CREATE TABLE Agendamento (
+    Agendamento_id INT PRIMARY KEY,
+    Data_agendamento DATE,
+    Hora_agendamento TIME,
+    Status VARCHAR(50),
+    Cliente_id INT,
+    Servico_id INT,
+    Profissional_id INT,
+    FOREIGN KEY (Cliente_id) REFERENCES Cliente(Cliente_id),
+    FOREIGN KEY (Servico_id) REFERENCES Servicos(Servico_id),
+    FOREIGN KEY (Profissional_id) REFERENCES Profissional(Profissional_id)
+);
+
+CREATE TABLE Pagamento (
+    Pagamento_id INT PRIMARY KEY,
+    Valor DECIMAL(10, 2),
+    Data_pagamento DATE,
+    Metodo_pagamento VARCHAR(50),
+    Agendamento_id INT,
+    FOREIGN KEY (Agendamento_id) REFERENCES Agendamento(Agendamento_id)
+);
